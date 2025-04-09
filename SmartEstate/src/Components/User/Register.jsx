@@ -1,156 +1,155 @@
-// Register.jsx
-import React, { useState } from 'react';
+import React, {useState} from 'react'
+import axios from 'axios'
 
-function Register() {
+/*workflow
+1. const Register (arrow function)- handel the usestate for regsitration
+2. usestate for msg and for error
+3. handel change: 
+
+*/
+
+
+const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
+    first_name: '',
+    last_name: '',
     password: '',
-    confirmPassword: ''
+    confirm_password: '',
   });
 
-  // Handle changes for each input field
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [validationError, setValidationError] = useState('');
+
+  const isValidPassword = (password) => {
+    const minLength = /.{8,}/;
+    const hasNumber = /\d/;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+    return (
+      minLength.test(password) &&
+      hasNumber.test(password) &&
+      hasSpecialChar.test(password)
+    );
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    // Basic client-side check: do passwords match?
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match.");
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
+    setValidationError('');
+
+    const {password, confirm_password} = formData;
+    if(password !== confirm_password){
+      setValidationError('Passwords do not match!');
       return;
     }
-
-    // Here’s where you’d typically call your FastAPI backend to register the user.
-    // Example using fetch:
-    /*
-    fetch('http://localhost:8000/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Registration success:', data);
-        // Possibly redirect or show a success message
-      })
-      .catch((error) => {
-        console.error('Error registering:', error);
+    if (!isValidPassword(password)) {
+      setValidationError("Password must be at least 8 characters, include a number and a special character.");
+      return;
+    }
+    try {
+      const {confirm_password, ...payload} = formData;
+      const response = await axios.post('http://localhost:8000/users/', payload);
+      setMessage('User registered successfully!');
+      setFormData({
+        email: '',
+        first_name: '',
+        last_name: '',
+        password: '',
+        confirm_password:''
       });
-    */
-
-    console.log('Register form submitted:', formData);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Registration failed.');
+    }
   };
 
   return (
     <div className="container mt-5" style={{ maxWidth: '500px' }}>
-      <h2 className="mb-4">Register</h2>
+      <h2 className="text-center mb-4">Register</h2>
+
+      {message && <div className="alert alert-success">{message}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
+      {validationError && <div className="alert alert-warning">{validationError}</div>}
+
       <form onSubmit={handleSubmit}>
-        {/* First Name Field */}
         <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">
-            First Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="Enter your first name"
-            required
-          />
-        </div>
-
-        {/* Last Name Field */}
-        <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">
-            Last Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Enter your last name"
-            required
-          />
-        </div>
-
-        {/* Email Field */}
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email Address
-          </label>
+          <label>Email address</label>
           <input
             type="email"
-            className="form-control"
-            id="email"
             name="email"
+            className="form-control"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
             required
           />
         </div>
 
-        {/* Password Field */}
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+          <label>First Name</label>
+          <input
+            type="text"
+            name="first_name"
+            className="form-control"
+            value={formData.first_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="last_name"
+            className="form-control"
+            value={formData.last_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label>Password</label>
           <input
             type="password"
-            className="form-control"
-            id="password"
             name="password"
+            className="form-control"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter a strong password"
             required
           />
         </div>
 
-        {/* Confirm Password Field */}
         <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirm Password
-          </label>
+          <label>Confirm Password</label>
           <input
             type="password"
+            name="confirm_password"
             className="form-control"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
+            value={formData.confirm_password}
             onChange={handleChange}
-            placeholder="Re-enter your password"
             required
           />
         </div>
 
-        {/* Submit Button */}
         <button type="submit" className="btn btn-primary w-100">
           Register
         </button>
       </form>
     </div>
   );
-}
+};
 
 export default Register;
+
+

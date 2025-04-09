@@ -1,21 +1,28 @@
 from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List, Annotated
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 models.Base.metadata.create_all(bind = engine)
-
-class ChoiceBase(BaseModel):
-    choice_text: str
-    is_correct: bool
-
-class QuestionBase(BaseModel):
-    question_text: str
-    choices: List[ChoiceBase]
-
+class UserBase(BaseModel):
+    email:EmailStr
+    first_name: str
+    last_name: str
+    password: str
 
 def get_db():
     db = SessionLocal()
@@ -26,16 +33,25 @@ def get_db():
     
 db_dependency = Annotated[Session, Depends(get_db)]
 
-@app.post("/questions/")
-async def create_questions(question: QuestionBase, db: db_dependency):
-    db_question = models.Questions(question_text = question.question_text)
-    db.add(db_question)
+
+@app.post("/users/")
+async def create_user(user: UserBase, db: db_dependency):
+    existing_user = db.query(models.Users).filter(models.Users.email == user.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already used!")
+
+    db_user = models.Users(
+        first_name = user.first_name,
+        last_name = user.last_name,
+        password = user.password,  # need to be hashed
+        email = user.email
+    )
+    db.add(db_user)
     db.commit()
-    db.refresh(db_question)
-    for choice in question.choices:
-        db_choice = models.Choices(choice_text = choice.choice_text, is_correct = choice.is_correct, question_id = db_question.id)
-    db.add(db_choice)
-    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
     
 
 

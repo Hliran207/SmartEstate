@@ -1,18 +1,11 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from database import Base
 
-class Questions(Base):
-    __tablename__ = 'questions'
+class Users(Base):
+    __tablename__ = 'Users'
 
-    id = Column(Integer, primary_key= True, index=True)
-    question_text = Column(String, index = True)
-
-class Choices(Base):
-    __tablename__ = 'choices'
-
-    id = Column(Integer, primary_key=True, index= True)
-    choice_text = Column(String, index = True)
-    is_correct = Column(Boolean, default=False)
-    question_id = Column(Integer, ForeignKey("questions.id"))
-
-
+    ID = Column(Integer, primary_key=True, index= True)
+    email = Column(String, nullable= False)
+    first_name = Column(String, nullable= False)
+    last_name = Column(String, nullable = False)
+    password = Column(String, nullable = False)
