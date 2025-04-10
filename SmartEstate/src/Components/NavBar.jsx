@@ -8,8 +8,8 @@ const NavBar = ({ user, setUser }) => {
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:8000/logout/', {}, { withCredentials: true });
-      setUser(null); // ✅ update App state
-      navigate('/'); // optional: redirect to home
+      setUser(null); 
+      navigate('/'); 
     } catch (err) {
       console.error("Logout failed", err);
     }
