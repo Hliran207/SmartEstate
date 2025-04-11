@@ -11,6 +11,11 @@ from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to SmartEstate API 👋"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],  # React dev server

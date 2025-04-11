@@ -1,0 +1,7 @@
+#lib for download 
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+itsdangerous
+pydantic[email]
