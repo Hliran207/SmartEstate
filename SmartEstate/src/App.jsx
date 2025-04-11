@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import 'leaflet/dist/leaflet.css';
 import axios from "axios";
 import NavBar from "./Components/NavBar";
+import MapBeerSheva from "./Components/MapBeerSheva";
+import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
   const [user, setUser] = useState(null); // shared user state
@@ -23,9 +26,10 @@ function App() {
         {user ? (
           <h1>Hello, {user} 👋</h1>
         ) : (
-          <h1>Welcome to my React + Bootstrap App</h1>
+          <h1>ברוכים הבאים לאתר הנדל״ן הטוב בארץ עם דירוג השכונות</h1>
         )}
-        <p>Here’s some content below the navbar.</p>
+        <p>מפת באר שבע</p>
+        <MapBeerSheva />
       </div>
     </div>
   );

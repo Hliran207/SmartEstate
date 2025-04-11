@@ -17,7 +17,7 @@ const NavBar = ({ user, setUser }) => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-      <Link to="/" className="navbar-brand">MyApp</Link>
+      <Link to="/" className="navbar-brand">SmartEstate</Link>
       <div className="collapse navbar-collapse justify-content-end">
         <ul className="navbar-nav">
           {!user ? (
