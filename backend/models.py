@@ -9,3 +9,4 @@ class Users(Base):
     first_name = Column(String, nullable= False)
     last_name = Column(String, nullable = False)
     password = Column(String, nullable = False)
+    # is_admin = Column(Boolean, nullable = False)
