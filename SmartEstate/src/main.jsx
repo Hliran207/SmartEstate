@@ -9,6 +9,7 @@ import App from "./App.jsx";
 import Register from "./Components/User/Register.jsx";
 import Login from "./Components/User/LogIn.jsx";
 import UserProfile from "./Components/User/UserProfile.jsx";
+import AdminHomePage from "./Components/Admin/AdminHomePage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/adminHomePage" element={<AdminHomePage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
