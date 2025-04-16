@@ -34,10 +34,12 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     password: str
+    is_admin: bool = False
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    
 
 def get_db():
     db = SessionLocal()
@@ -59,7 +61,8 @@ async def create_user(user: UserBase, db: db_dependency):
         first_name = user.first_name,
         last_name = user.last_name,
         password = user.password,  # need to be hashed
-        email = user.email
+        email = user.email,
+        is_admin = user.is_admin
     )
     db.add(db_user)
     db.commit()
@@ -70,14 +73,18 @@ async def create_user(user: UserBase, db: db_dependency):
 async def login(request: Request, login_data: LoginRequest, db: db_dependency):
     user = db.query(models.Users).filter(models.Users.email == login_data.email).first()
     if not user or user.password != login_data.password:
-        raise HTTPException(status_code=401, detail = "Invalid email or password")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    request.session["user"] ={
+    request.session["user"] = {
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name,
     }
-    return {"message": f"Welcome {user.first_name}!"}
+
+    return {
+        "message": f"Welcome {user.first_name}!",
+        "is_admin": user.is_admin  # Return is_admin status
+    }
     
 
 @app.get("/dashboard/")

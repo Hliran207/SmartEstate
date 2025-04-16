@@ -42,11 +42,6 @@ const NavBar = ({ user, setUser }) => {
                   Login
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/AdminHomePage" className="nav-link">
-                  Admin
-                </Link>
-              </li>
             </>
           ) : (
             <>
