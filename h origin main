@@ -1,0 +1,80 @@
+[33mcommit 5833b2e6193a5321d487c06b0924d0d1b28646e9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Merge: 823d302 e38361d
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 21:21:05 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 21:21:05 2025 +0300
+
+    Merge branch 'AdminPage'
+
+[33mcommit e38361dcfc274bd5714b5a9ad2ee2daa45dc95f7[m[33m ([m[1;32mAdminPage[m[33m)[m
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 21:20:43 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 21:20:43 2025 +0300
+
+    Remove __pycache__ from version control
+
+[33mcommit 9a5a568029631d95066074b5497973fd9f312dea[m[33m ([m[1;31mupstream/AdminPage[m[33m, [m[1;31morigin/AdminPage[m[33m)[m
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 21:15:26 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 21:15:26 2025 +0300
+
+    remove env
+
+[33mcommit 823d30280690fc0a707feb1fab5eb1660ae9fcd5[m
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 21:13:20 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 21:13:20 2025 +0300
+
+    Ignore backend/env virtual environment
+
+[33mcommit b1169144af45b75a8091bab9a77265ea43c67fa8[m
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 21:09:24 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 21:09:24 2025 +0300
+
+    Add .gitignore to ignore Python cache and virtual envs
+
+[33mcommit ef81446d0d9970cfcce8bde146db2e7e55687e78[m
+Author:     EtaiCohen <etaico@ac.sce.ac.il>
+AuthorDate: Tue Apr 15 19:52:24 2025 +0300
+Commit:     EtaiCohen <etaico@ac.sce.ac.il>
+CommitDate: Tue Apr 15 19:52:24 2025 +0300
+
+    admin page
+
+[33mcommit 997b5cbe5bd2a2085990acfee5219810d58d26a4[m
+Author:     EtaiCo <etaicohen1@gmail.com>
+AuthorDate: Tue Apr 15 19:46:20 2025 +0300
+Commit:     EtaiCo <etaicohen1@gmail.com>
+CommitDate: Tue Apr 15 19:46:20 2025 +0300
+
+    admin page
+
+[33mcommit 88584e03b23f83e95d55e2ed9e8cf3a85de76a13[m
+Author:     EtaiCo <etaicohen1@gmail.com>
+AuthorDate: Tue Apr 15 19:42:34 2025 +0300
+Commit:     EtaiCo <etaicohen1@gmail.com>
+CommitDate: Tue Apr 15 19:42:34 2025 +0300
+
+    admin page
+
+[33mcommit 403617a619a9d47855031cedc9af8127906cf413[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/UserProfile[m[33m, [m[1;31mupstream/HEAD[m[33m)[m
+Author:     sapirsh5 <sapirsh5@ac.sce.ac.il>
+AuthorDate: Fri Apr 11 17:43:47 2025 +0300
+Commit:     sapirsh5 <sapirsh5@ac.sce.ac.il>
+CommitDate: Fri Apr 11 17:43:47 2025 +0300
+
+    update3
+
+[33mcommit 871189284ffd85e877377e09a864b73aaac8f3b4[m
+Author:     sapirsh5 <sapirsh5@ac.sce.ac.il>
+AuthorDate: Fri Apr 11 17:42:43 2025 +0300
+Commit:     sapirsh5 <sapirsh5@ac.sce.ac.il>
+CommitDate: Fri Apr 11 17:42:43 2025 +0300
+
+    update2
