@@ -1,8 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "./User/AuthContext";
 
-const NavBar = ({ user, setUser }) => {
+const NavBar = () => {
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -42,7 +44,7 @@ const NavBar = ({ user, setUser }) => {
           ) : (
             <>
               <li className="nav-item">
-                <span className="nav-link">Hi, {user}</span>
+                <span className="nav-link">Hi, {user.first_name}</span>
               </li>
               <li className="nav-item">
                 <Link to="/profile" className="nav-link">

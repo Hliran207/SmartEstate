@@ -1,10 +1,10 @@
 import React, { use, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const UserProfile = () => {
-  const [user, setUser] = useState({
-    name: "sapir shenkor",
-    email: "sapir1234@gmail.com",
-  });
+  const { user } = useAuth();
+
   const [favorites, setFavorites] = useState([
     { id: 1, title: "דירה בתל אביב, 3 חדרים", address: "תל אביב" },
     { id: 2, title: "דירה בירושלים, 4 חדרים", address: "ירושלים" },
@@ -17,6 +17,17 @@ const UserProfile = () => {
     alert("תודה על המשוב שלך!");
     setReviews("");
   };
+  if (!user) {
+    return (
+      <div className="container mt-5">
+        <h2>Please log in to view your profile.</h2>
+        <Link to="/login" className="btn btn-primary">
+          Log In
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-5">
       <div className="row">
@@ -26,17 +37,23 @@ const UserProfile = () => {
             <div className="card-body">
               <h5 className="card-title">Personal Information</h5>
               <p>
-                <strong>Name:</strong> {user.name}
+                <strong>Name:</strong> {user.first_name} {user.last_name}
               </p>
               <p>
                 <strong>Email:</strong> {user.email}
               </p>
-              <button className="btn btn-outline-primary me-2 w-100 mb-2">
+              <Link
+                to="/update-profile"
+                className="btn btn-outline-primary me-2 w-100 mb-2"
+              >
                 Edit Details
-              </button>
-              <button className="btn btn-outline-secondary w-100">
+              </Link>
+              <Link
+                to="/change-password"
+                className="btn btn-outline-secondary w-100"
+              >
                 Change Password
-              </button>
+              </Link>
             </div>
           </div>
         </div>

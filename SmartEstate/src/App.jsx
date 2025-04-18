@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NavBar from "./Components/NavBar";
+import { useAuth } from "./Components/User/AuthContext";
 
 function App() {
-  const [user, setUser] = useState(null); // shared user state
+  const { user, setUser } = useAuth(); // shared user state
 
   useEffect(() => {
     axios
       .get("http://localhost:8000/dashboard/", { withCredentials: true })
       .then((res) => {
-        setUser(res.data.first_name);
+        setUser(res.data.user); // set user from server response
       })
       .catch(() => {
         setUser(null); // not logged in or session expired
       });
-  }, []);
+  }, [setUser]);
 
   return (
     <div>
       <NavBar user={user} setUser={setUser} />
       <div className="container mt-4">
         {user ? (
-          <h1>Hello, {user} 👋</h1>
+          <h1>Hello, {user.first_name} 👋</h1>
         ) : (
           <h1>Welcome to my React + Bootstrap App</h1>
         )}
