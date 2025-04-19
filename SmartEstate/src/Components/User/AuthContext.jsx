@@ -8,6 +8,10 @@ export const AuthProvider = ({ children }) => {
     const local = sessionStorage.getItem("user");
     return local ? JSON.parse(local) : null;
   });
+  const [isAdmin, setIsAdmin] = useState(() => {
+    const local = sessionStorage.getItem("isAdmin");
+    return local ? JSON.parse(local) : false;
+  });
 
   // עדכון sessionStorage בכל שינוי ב-user
   useEffect(() => {
@@ -18,6 +22,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    sessionStorage.setItem("isAdmin", JSON.stringify(isAdmin));
+  }, [isAdmin]);
+
   // טעינה מהשרת לאחר עליית האפליקציה
   useEffect(() => {
     axios
@@ -25,15 +33,17 @@ export const AuthProvider = ({ children }) => {
       .then((res) => {
         if (res.data.user) {
           setUser(res.data.user);
+          setIsAdmin(res.data.user.is_admin || false);
         }
       })
       .catch(() => {
         setUser(null);
+        setIsAdmin(false);
       });
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, isAdmin, setIsAdmin }}>
       {children}
     </AuthContext.Provider>
   );

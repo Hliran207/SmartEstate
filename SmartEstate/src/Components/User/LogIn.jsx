@@ -7,7 +7,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { setUser, setIsAdmin } = useAuth();
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -22,12 +22,12 @@ const Login = () => {
         }
       );
 
-      const isAdmin = response.data.is_admin;
+      setUser(response.data.user);
+      setIsAdmin(response.data.is_admin);
 
-      if (isAdmin) {
+      if (response.data.is_admin) {
         navigate("/adminHomePage");
       } else {
-        setUser(response.data.user);
         navigate("/");
       }
     } catch (err) {

@@ -109,15 +109,18 @@ async def login(request: Request, login_data: LoginRequest, db: db_dependency):
         "email": user.email,
         "first_name": user.first_name,
         "last_name": user.last_name,
+        "is_admin": user.is_admin
     }
     return {
-    "user": {
-        "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-    },
-    "message": f"Welcome {user.first_name}!"
-}
+        "user": {
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "is_admin": user.is_admin
+        },
+        "is_admin": user.is_admin,
+        "message": f"Welcome {user.first_name}!"
+    }
 
     
 
@@ -262,4 +265,44 @@ async def get_user_preferences(request: Request, db: db_dependency):
         "petsAllowed": preferences.pets_allowed,
         "accessibility": preferences.accessibility,
         "additionalNotes": preferences.additional_notes
+    }
+
+@app.get("/admin/analytics/users")
+async def get_user_analytics(request: Request, db: db_dependency):
+    user = request.session.get("user")
+    if not user or not user.get("is_admin"):
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    # Get total users count
+    total_users = db.query(models.Users).count()
+    
+    # Get active users (users who logged in in the last 30 days)
+    # For now, we'll return all users as active since we don't track last login
+    active_users = total_users
+    
+    # Get new users (registered in the last 30 days)
+    # For now, we'll return all users as new since we don't track registration date
+    new_users = total_users
+
+    # Get user activity data (mock data for now)
+    user_activity = [
+        {"date": "2024-01", "activeUsers": total_users, "newUsers": new_users},
+        {"date": "2024-02", "activeUsers": total_users, "newUsers": new_users},
+        {"date": "2024-03", "activeUsers": total_users, "newUsers": new_users}
+    ]
+
+    # Get user types distribution
+    admin_count = db.query(models.Users).filter(models.Users.is_admin == True).count()
+    regular_count = total_users - admin_count
+    user_types = [
+        {"type": "מנהלים", "count": admin_count},
+        {"type": "משתמשים רגילים", "count": regular_count}
+    ]
+
+    return {
+        "totalUsers": total_users,
+        "activeUsers": active_users,
+        "newUsers": new_users,
+        "userActivity": user_activity,
+        "userTypes": user_types
     }
