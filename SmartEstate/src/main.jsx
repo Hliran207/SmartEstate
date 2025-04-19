@@ -14,23 +14,18 @@ import { AuthProvider } from "./Components/User/AuthContext.jsx";
 import NavBar from "./Components/NavBar.jsx";
 import UpdateProfile from "./Components/User/UpdateProfile.jsx";
 import AdminHomePage from "./Components/Admin/AdminHomePage.jsx";
+import PersonalQuestionnaire from "./Components/User/PersonalQuestionnaire.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          <Route path="/navbar" element={<NavBar />} />
-          <Route path="/update-profile" element={<UpdateProfile />} />
-          <Route path="/adminHomePage" element={<AdminHomePage />} />
-          {/* Add more routes as needed */}
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/adminHomePage" element={<AdminHomePage />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>
 );
