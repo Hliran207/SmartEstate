@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,8 +9,8 @@ const NavBar = ({ user, setUser }) => {
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:8000/logout/', {}, { withCredentials: true });
-      setUser(null); 
-      navigate('/'); 
+      setUser(null);
+      navigate('/');
     } catch (err) {
       console.error("Logout failed", err);
     }
@@ -41,9 +41,9 @@ const NavBar = ({ user, setUser }) => {
               <li className="nav-item">
                 <button className="btn btn-link nav-link" onClick={handleLogout}>Logout</button>
               </li>
-            )}
-          </ul>
-        </div>
+            </>
+          )}
+        </ul>
       </div>
     </nav>
   );

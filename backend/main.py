@@ -11,12 +11,15 @@ from geopy.geocoders import Nominatim
 
 
 
+
 app = FastAPI()
 
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to SmartEstate API 👋"}
+
+app.add_middleware(SessionMiddleware, secret_key = "your-super-secret-key", max_age = 1800)
 
 app.add_middleware(
     CORSMiddleware,
