@@ -47,6 +47,16 @@ class LoginRequest(BaseModel):
     password: str
     
 
+class changePasswordRequest(BaseModel):
+    email: EmailStr
+    current_password: str
+    new_password: str
+
+class UpdateProfileRequest(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+
 def get_db():
     db = SessionLocal()
     try:
@@ -86,11 +96,23 @@ async def login(request: Request, login_data: LoginRequest, db: db_dependency):
         "first_name": user.first_name,
         "last_name": user.last_name,
     }
+<<<<<<< HEAD
 
     return {
         "message": f"Welcome {user.first_name}!",
         "is_admin": user.is_admin  # Return is_admin status
     }
+=======
+    return {
+    "user": {
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+    },
+    "message": f"Welcome {user.first_name}!"
+}
+
+>>>>>>> UserProfile
     
 
 @app.get("/dashboard/")
@@ -100,9 +122,12 @@ async def dashboard(request: Request):
         raise HTTPException(status_code=401, detail="Not authenticated")
 
     return {
-        "message": f"Hello, {user['first_name']}!",
-        "first_name": user["first_name"],
-        "email": user["email"],
+        "user": {  
+            "first_name": user["first_name"],
+            "last_name": user["last_name"],
+            "email": user["email"],
+        },
+        "message": f"Hello, {user['first_name']}!"
     }
 
 @app.post("/logout/")
@@ -110,7 +135,21 @@ async def logout(request: Request):
     request.session.clear()
     return {"message": "Logged out successfully"}
 
+@app.post("/change-password/")
+def change_password(request: Request, change_password_data: changePasswordRequest, db: db_dependency):
+    user = db.query(models.Users).filter(models.Users.email == change_password_data.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.password != change_password_data.current_password:
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    
+    user.password = change_password_data.new_password
+    db.commit()
+    db.refresh(user)
+    return {"message": "Password changed successfully"}
 
+<<<<<<< HEAD
 
 @app.get("/reverse_geocode/")
 async def reverse_geocode(lat: float = Query(...), lon: float = Query(...)):
@@ -121,3 +160,20 @@ async def reverse_geocode(lat: float = Query(...), lon: float = Query(...)):
     if not location:
         raise HTTPException(status_code=404, detail="Address not found")
     return {"address": location.address}
+=======
+@app.put("/update-profile/")
+def update_profile(request: Request, update_profile_data: UpdateProfileRequest, db: db_dependency):
+    user = db.query(models.Users).filter(models.Users.email == update_profile_data.email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.first_name = update_profile_data.first_name
+    user.last_name = update_profile_data.last_name
+    db.commit()
+    db.refresh(user)
+    return {
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+    }
+>>>>>>> UserProfile
