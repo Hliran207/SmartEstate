@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, HTTPException, Depends, Request ,Query
 from pydantic import BaseModel, EmailStr
 from typing import List, Annotated
 import models
@@ -6,6 +6,8 @@ from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from geopy.geocoders import Nominatim
+
 
 
 
@@ -28,6 +30,7 @@ app.add_middleware(
 app.add_middleware(SessionMiddleware, secret_key = "your-super-secret-key", max_age = 1800)
 models.Base.metadata.create_all(bind = engine)
 
+geolocator = Nominatim(user_agent="smartestate-app")
 
 class UserBase(BaseModel):
     email:EmailStr
@@ -106,3 +109,12 @@ async def logout(request: Request):
 
 
 
+@app.get("/reverse_geocode/")
+async def reverse_geocode(lat: float = Query(...), lon: float = Query(...)):
+    """
+    Receives latitude & longitude and returns a textual address (reverse geocoding).
+    """
+    location = geolocator.reverse((lat, lon), exactly_one=True, language="he")
+    if not location:
+        raise HTTPException(status_code=404, detail="Address not found")
+    return {"address": location.address}
