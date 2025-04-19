@@ -96,13 +96,6 @@ async def login(request: Request, login_data: LoginRequest, db: db_dependency):
         "first_name": user.first_name,
         "last_name": user.last_name,
     }
-<<<<<<< HEAD
-
-    return {
-        "message": f"Welcome {user.first_name}!",
-        "is_admin": user.is_admin  # Return is_admin status
-    }
-=======
     return {
     "user": {
         "email": user.email,
@@ -112,7 +105,6 @@ async def login(request: Request, login_data: LoginRequest, db: db_dependency):
     "message": f"Welcome {user.first_name}!"
 }
 
->>>>>>> UserProfile
     
 
 @app.get("/dashboard/")
@@ -149,7 +141,6 @@ def change_password(request: Request, change_password_data: changePasswordReques
     db.refresh(user)
     return {"message": "Password changed successfully"}
 
-<<<<<<< HEAD
 
 @app.get("/reverse_geocode/")
 async def reverse_geocode(lat: float = Query(...), lon: float = Query(...)):
@@ -160,7 +151,6 @@ async def reverse_geocode(lat: float = Query(...), lon: float = Query(...)):
     if not location:
         raise HTTPException(status_code=404, detail="Address not found")
     return {"address": location.address}
-=======
 @app.put("/update-profile/")
 def update_profile(request: Request, update_profile_data: UpdateProfileRequest, db: db_dependency):
     user = db.query(models.Users).filter(models.Users.email == update_profile_data.email).first()
@@ -176,4 +166,3 @@ def update_profile(request: Request, update_profile_data: UpdateProfileRequest, 
         "last_name": user.last_name,
         "email": user.email,
     }
->>>>>>> UserProfile

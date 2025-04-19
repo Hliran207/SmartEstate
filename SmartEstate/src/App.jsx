@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import NavBar from "./Components/NavBar";
-<<<<<<< HEAD
 import MapBeerSheva from "./Components/MapBeerSheva";
 import "bootstrap/dist/css/bootstrap.css";
-=======
 import { useAuth } from "./Components/User/AuthContext";
->>>>>>> UserProfile
 
 function App() {
   const { user, setUser } = useAuth(); // shared user state
