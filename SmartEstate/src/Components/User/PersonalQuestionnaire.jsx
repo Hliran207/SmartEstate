@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Card, Navbar, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const PersonalQuestionnaire = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     propertyType: '',
     budget: '',
@@ -26,10 +28,19 @@ const PersonalQuestionnaire = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Add API call when backend is ready
-    console.log('Questionnaire submitted:', formData);
+    try {
+      await axios.post(
+        'http://localhost:8000/user-preferences/',
+        formData,
+        { withCredentials: true }
+      );
+      navigate('/profile');
+    } catch (error) {
+      console.error('Error saving preferences:', error);
+      alert('שגיאה בשמירת ההעדפות. אנא נסה שוב.');
+    }
   };
 
   return (
@@ -217,7 +228,6 @@ const PersonalQuestionnaire = () => {
                   </div>
                 </div>
               </Form.Group>
-
 
               <div className="text-center mt-5">
                 <Button 

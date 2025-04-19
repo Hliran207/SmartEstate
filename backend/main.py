@@ -57,6 +57,20 @@ class UpdateProfileRequest(BaseModel):
     last_name: str
     email: EmailStr
 
+class UserPreferencesRequest(BaseModel):
+    propertyType: str
+    budget: int
+    location: str
+    rooms: str
+    size: int
+    parking: bool = False
+    elevator: bool = False
+    balcony: bool = False
+    garden: bool = False
+    petsAllowed: bool = False
+    accessibility: bool = False
+    additionalNotes: str = None
+
 def get_db():
     db = SessionLocal()
     try:
@@ -165,4 +179,87 @@ def update_profile(request: Request, update_profile_data: UpdateProfileRequest, 
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
+    }
+
+@app.post("/user-preferences/")
+async def save_user_preferences(request: Request, preferences: UserPreferencesRequest, db: db_dependency):
+    user = request.session.get("user")
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    db_user = db.query(models.Users).filter(models.Users.email == user["email"]).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Check if preferences already exist for this user
+    existing_preferences = db.query(models.UserPreferences).filter(
+        models.UserPreferences.user_id == db_user.ID
+    ).first()
+
+    if existing_preferences:
+        # Update existing preferences
+        existing_preferences.property_type = preferences.propertyType
+        existing_preferences.budget = preferences.budget
+        existing_preferences.location = preferences.location
+        existing_preferences.rooms = preferences.rooms
+        existing_preferences.size = preferences.size
+        existing_preferences.parking = preferences.parking
+        existing_preferences.elevator = preferences.elevator
+        existing_preferences.balcony = preferences.balcony
+        existing_preferences.garden = preferences.garden
+        existing_preferences.pets_allowed = preferences.petsAllowed
+        existing_preferences.accessibility = preferences.accessibility
+        existing_preferences.additional_notes = preferences.additionalNotes
+    else:
+        # Create new preferences
+        new_preferences = models.UserPreferences(
+            user_id=db_user.ID,
+            property_type=preferences.propertyType,
+            budget=preferences.budget,
+            location=preferences.location,
+            rooms=preferences.rooms,
+            size=preferences.size,
+            parking=preferences.parking,
+            elevator=preferences.elevator,
+            balcony=preferences.balcony,
+            garden=preferences.garden,
+            pets_allowed=preferences.petsAllowed,
+            accessibility=preferences.accessibility,
+            additional_notes=preferences.additionalNotes
+        )
+        db.add(new_preferences)
+
+    db.commit()
+    return {"message": "Preferences saved successfully"}
+
+@app.get("/user-preferences/")
+async def get_user_preferences(request: Request, db: db_dependency):
+    user = request.session.get("user")
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    db_user = db.query(models.Users).filter(models.Users.email == user["email"]).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    preferences = db.query(models.UserPreferences).filter(
+        models.UserPreferences.user_id == db_user.ID
+    ).first()
+
+    if not preferences:
+        raise HTTPException(status_code=404, detail="Preferences not found")
+
+    return {
+        "propertyType": preferences.property_type,
+        "budget": preferences.budget,
+        "location": preferences.location,
+        "rooms": preferences.rooms,
+        "size": preferences.size,
+        "parking": preferences.parking,
+        "elevator": preferences.elevator,
+        "balcony": preferences.balcony,
+        "garden": preferences.garden,
+        "petsAllowed": preferences.pets_allowed,
+        "accessibility": preferences.accessibility,
+        "additionalNotes": preferences.additional_notes
     }
