@@ -1,12 +1,14 @@
 from fastapi import FastAPI, HTTPException, Depends, Request ,Query
 from pydantic import BaseModel, EmailStr
-from typing import List, Annotated
+from typing import List, Annotated, Optional
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from geopy.geocoders import Nominatim
+import json
+import requests
 
 
 
@@ -70,6 +72,23 @@ class UserPreferencesRequest(BaseModel):
     petsAllowed: bool = False
     accessibility: bool = False
     additionalNotes: str = None
+
+class MapLayerRequest(BaseModel):
+    layers: List[str]  # List of amenity types to show (e.g., ['school', 'kindergarten'])
+    bbox: Optional[str] = None  # Optional bounding box for filtering
+
+class POIResponse(BaseModel):
+    id: int
+    name: str
+    type: str
+    latitude: float
+    longitude: float
+    description: Optional[str]
+    address: Optional[str]
+    tags: Optional[str]
+
+    class Config:
+        from_attributes = True
 
 def get_db():
     db = SessionLocal()
@@ -306,3 +325,161 @@ async def get_user_analytics(request: Request, db: db_dependency):
         "userActivity": user_activity,
         "userTypes": user_types
     }
+
+@app.get("/map/layers")
+async def get_map_layers(request: Request, db: db_dependency):
+    """Get available map layers"""
+    return {
+        "layers": [
+            {"id": "school", "name": "בתי ספר"},
+            {"id": "kindergarten", "name": "גני ילדים"},
+            {"id": "college", "name": "מכללות"},
+            {"id": "shelter", "name": "מקלטים"},
+            {"id": "hospital", "name": "בתי חולים"},
+            {"id": "pharmacy", "name": "בתי מרקחת"},
+            {"id": "park", "name": "פארקים"},
+            {"id": "playground", "name": "גני שעשועים"}
+        ]
+    }
+
+@app.post("/map/pois")
+async def get_points_of_interest(request: Request, layer_request: MapLayerRequest, db: db_dependency):
+    """Get points of interest for selected layers"""
+    if not layer_request.layers:
+        return {"features": []}
+
+    # Query POIs from database based on requested layers
+    query = db.query(models.POI)
+    if layer_request.layers:
+        query = query.filter(models.POI.type.in_(layer_request.layers))
+    
+    pois = query.all()
+    
+    # Convert to GeoJSON
+    features = []
+    for poi in pois:
+        feature = {
+            "type": "Feature",
+            "properties": {
+                "id": str(poi.id),
+                "name": poi.name,
+                "amenity": poi.type,  # Using the POI type as amenity for frontend compatibility
+                "tags": json.loads(poi.tags) if poi.tags else {}
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [poi.longitude, poi.latitude]
+            }
+        }
+        features.append(feature)
+    
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    }
+
+@app.get("/pois", response_model=List[POIResponse])
+def get_pois(db: db_dependency, type: Optional[str] = None):
+    """Get all POIs, optionally filtered by type"""
+    query = db.query(models.POI)
+    if type:
+        query = query.filter(models.POI.type == type)
+    return query.all()
+
+@app.get("/poi_types")
+def get_poi_types(db: db_dependency):
+    """Get all unique POI types in the database"""
+    types = db.query(models.POI.type).distinct().all()
+    return [t[0] for t in types if t[0]]  # Filter out None values and extract from tuples
+
+@app.get("/poi/{poi_id}", response_model=POIResponse)
+def get_poi(poi_id: int, db: db_dependency):
+    """Get a specific POI by ID"""
+    poi = db.query(models.POI).filter(models.POI.id == poi_id).first()
+    if not poi:
+        raise HTTPException(status_code=404, detail="POI not found")
+    return poi
+
+@app.post("/poi", response_model=POIResponse)
+def create_poi(poi: POIResponse, db: db_dependency):
+    """Create a new POI"""
+    db_poi = models.POI(**poi.dict())
+    db.add(db_poi)
+    db.commit()
+    db.refresh(db_poi)
+    return db_poi
+
+@app.put("/poi/{poi_id}", response_model=POIResponse)
+def update_poi(poi_id: int, poi: POIResponse, db: db_dependency):
+    """Update an existing POI"""
+    db_poi = db.query(models.POI).filter(models.POI.id == poi_id).first()
+    if not db_poi:
+        raise HTTPException(status_code=404, detail="POI not found")
+    
+    for key, value in poi.dict(exclude_unset=True).items():
+        setattr(db_poi, key, value)
+    
+    db.commit()
+    db.refresh(db_poi)
+    return db_poi
+
+@app.delete("/poi/{poi_id}")
+def delete_poi(poi_id: int, db: db_dependency):
+    """Delete a POI"""
+    db_poi = db.query(models.POI).filter(models.POI.id == poi_id).first()
+    if not db_poi:
+        raise HTTPException(status_code=404, detail="POI not found")
+    
+    db.delete(db_poi)
+    db.commit()
+    return {"message": "POI deleted successfully"}
+
+@app.get("/search")
+async def search_pois(q: str, db: db_dependency):
+    """Search POIs and addresses"""
+    results = []
+    
+    # חיפוש ב-POIs
+    query = db.query(models.POI).filter(
+        models.POI.name.ilike(f"%{q}%")
+    )
+    poi_results = query.all()
+    
+    # המרת תוצאות ה-POIs לפורמט אחיד
+    results.extend([{
+        "name": poi.name,
+        "type": poi.type,
+        "latitude": poi.latitude,
+        "longitude": poi.longitude,
+        "address": poi.address,
+        "source": "poi"
+    } for poi in poi_results])
+    
+    # חיפוש כתובת באמצעות geocoding
+    try:
+        # הוספת "באר שבע" לחיפוש אם לא צוין
+        search_query = q if "באר שבע" in q.lower() else f"{q}, באר שבע"
+        locations = geolocator.geocode(
+            search_query,
+            exactly_one=False,
+            language="he",
+            country_codes=["il"],
+            limit=5
+        )
+        
+        if locations:
+            for location in locations:
+                # בדיקה שהמיקום אכן בבאר שבע
+                if "באר שבע" in location.address:
+                    results.append({
+                        "name": location.address,
+                        "type": "address",
+                        "latitude": location.latitude,
+                        "longitude": location.longitude,
+                        "address": location.address,
+                        "source": "geocoding"
+                    })
+    except Exception as e:
+        print(f"Geocoding error: {e}")
+    
+    return results

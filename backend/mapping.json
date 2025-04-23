@@ -1,0 +1,45 @@
+{
+  "tables": {
+    "osm_data": {
+      "fields": [
+        {
+          "name": "osm_id",
+          "type": "id"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "amenity",
+          "type": "string"
+        },
+        {
+          "name": "latitude",
+          "type": "float"
+        },
+        {
+          "name": "longitude",
+          "type": "float"
+        },
+        {
+          "name": "tags",
+          "type": "jsonb"
+        }
+      ],
+      "type": "point",
+      "mapping": {
+        "amenity": [
+          "school",
+          "kindergarten",
+          "college",
+          "shelter",
+          "hospital",
+          "pharmacy",
+          "park",
+          "playground"
+        ]
+      }
+    }
+  }
+}
