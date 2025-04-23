@@ -1,3 +1,13 @@
+/* עיצוב בסיסי של המפה */
+.leaflet-container {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  height: 100vh;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+/* עיצוב האייקונים המותאמים אישית */
 .custom-icon {
   background: none !important;
   border: none !important;
@@ -12,46 +22,141 @@
   background: white;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.custom-marker:hover {
+  transform: scale(1.1);
 }
 
 .custom-marker span {
   filter: none;
   line-height: 1;
+  font-size: 20px;
 }
 
+/* עיצוב חלון הפופ-אפ */
 .leaflet-popup-content {
   direction: rtl;
   text-align: right;
-  min-width: 150px;
+  min-width: 200px;
   font-size: 14px;
+  padding: 10px;
 }
 
-.leaflet-container {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.2);
 }
 
 /* עיצוב תפריט השכבות */
 .layer-control {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
   background: white;
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.layer-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .layer-control h3 {
-  margin: 0 0 15px 0;
-  font-size: 16px;
+  margin: 0;
+  font-size: 18px;
   color: #333;
+  font-weight: 600;
 }
 
-.layer-control label {
+.toggle-layers-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.toggle-layers-btn:hover {
+  background-color: #f0f7ff;
+}
+
+.layers-list {
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+  padding-right: 5px;
+}
+
+.layers-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.layers-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.layers-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.layers-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.layer-item {
   margin: 8px 0;
-  color: #444;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
 }
 
-.layer-control input[type="checkbox"] {
+.layer-item:hover {
+  background-color: #f8f9fa;
+}
+
+.layer-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.layer-item input[type="checkbox"] {
   margin-left: 8px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.layer-icon {
+  margin: 0 8px;
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.layer-name {
+  flex: 1;
+  font-size: 14px;
+  color: #444;
 }
 
 /* עיצוב אזור החיפוש */
@@ -73,8 +178,6 @@
 /* עיצוב קומפוננטת החיפוש */
 .search-control {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
   direction: rtl;
 }
 
@@ -94,6 +197,12 @@
   border-radius: 4px;
   font-size: 16px;
   direction: rtl;
+  transition: border-color 0.2s;
+}
+
+.search-input-container input:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 .search-input-container button {

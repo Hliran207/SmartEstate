@@ -30,6 +30,20 @@ const ICONS = {
   playground: createCustomIcon('🎪'),
   library: createCustomIcon('📚'),
   place_of_worship: createCustomIcon('🕍'),
+  supermarket: createCustomIcon('🛒'),
+  mall: createCustomIcon('🏬'),
+  bus_station: createCustomIcon('🚌'),
+  train_station: createCustomIcon('🚉'),
+  restaurant: createCustomIcon('🍽️'),
+  cafe: createCustomIcon('☕'),
+  gym: createCustomIcon('💪'),
+  bank: createCustomIcon('🏦'),
+  post_office: createCustomIcon('📮'),
+  community_center: createCustomIcon('🏛️'),
+  daycare: createCustomIcon('👶'),
+  police: createCustomIcon('👮'),
+  fire_station: createCustomIcon('🚒'),
+  recycling: createCustomIcon('♻️'),
   default: DefaultIcon
 };
 
@@ -54,7 +68,21 @@ const AVAILABLE_LAYERS = [
   { id: 'park', name: 'פארקים', icon: '🌳' },
   { id: 'playground', name: 'גני שעשועים', icon: '🎪' },
   { id: 'library', name: 'ספריות', icon: '📚' },
-  { id: 'place_of_worship', name: 'בתי כנסת', icon: '🕍' }
+  { id: 'place_of_worship', name: 'בתי כנסת', icon: '🕍' },
+  { id: 'supermarket', name: 'סופרמרקטים', icon: '🛒' },
+  { id: 'mall', name: 'קניונים', icon: '🏬' },
+  { id: 'bus_station', name: 'תחנות אוטובוס', icon: '🚌' },
+  { id: 'train_station', name: 'תחנות רכבת', icon: '🚉' },
+  { id: 'restaurant', name: 'מסעדות', icon: '🍽️' },
+  { id: 'cafe', name: 'בתי קפה', icon: '☕' },
+  { id: 'gym', name: 'מכוני כושר', icon: '💪' },
+  { id: 'bank', name: 'בנקים', icon: '🏦' },
+  { id: 'post_office', name: 'דואר', icon: '📮' },
+  { id: 'community_center', name: 'מרכזים קהילתיים', icon: '🏛️' },
+  { id: 'daycare', name: 'מעונות יום', icon: '👶' },
+  { id: 'police', name: 'תחנות משטרה', icon: '👮' },
+  { id: 'fire_station', name: 'תחנות כיבוי אש', icon: '🚒' },
+  { id: 'recycling', name: 'מרכזי מיחזור', icon: '♻️' }
 ];
 
 // קומפוננטת החיפוש
@@ -180,21 +208,37 @@ function ClickHandler({ setClicked }) {
 
 // קומפוננטת בקרת השכבות
 function LayerControl({ activeLayers, onToggleLayer }) {
+  const [showAllLayers, setShowAllLayers] = useState(false);
+  const visibleLayers = showAllLayers ? AVAILABLE_LAYERS : AVAILABLE_LAYERS.slice(0, 10);
+
   return (
-    <div className="layer-control" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}>
-      <h3>שכבות</h3>
-      {AVAILABLE_LAYERS.map(layer => (
-        <div key={layer.id}>
-          <label>
-            <input
-              type="checkbox"
-              checked={activeLayers.includes(layer.id)}
-              onChange={() => onToggleLayer(layer.id)}
-            />
-            {layer.icon} {layer.name}
-          </label>
-        </div>
-      ))}
+    <div className="layer-control">
+      <div className="layer-control-header">
+        <h3>שכבות</h3>
+        {AVAILABLE_LAYERS.length > 10 && (
+          <button 
+            className="toggle-layers-btn"
+            onClick={() => setShowAllLayers(!showAllLayers)}
+          >
+            {showAllLayers ? 'הצג פחות' : 'הצג עוד'}
+          </button>
+        )}
+      </div>
+      <div className="layers-list">
+        {visibleLayers.map(layer => (
+          <div key={layer.id} className="layer-item">
+            <label>
+              <input
+                type="checkbox"
+                checked={activeLayers.includes(layer.id)}
+                onChange={() => onToggleLayer(layer.id)}
+              />
+              <span className="layer-icon">{layer.icon}</span>
+              <span className="layer-name">{layer.name}</span>
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

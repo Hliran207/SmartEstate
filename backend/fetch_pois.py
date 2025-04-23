@@ -46,6 +46,66 @@ POI_TYPES = {
     'place_of_worship': {
         'tags': ['["amenity"="place_of_worship"]["religion"="jewish"]'],
         'name': 'בית כנסת'
+    },
+    'supermarket': {
+        'tags': ['["shop"="supermarket"]'],
+        'name': 'סופרמרקט'
+    },
+    'mall': {
+        'tags': ['["shop"="mall"]'],
+        'name': 'קניון'
+    },
+    'bus_station': {
+        'tags': [
+            '["amenity"="bus_station"]',
+            '["highway"="bus_stop"]',
+            '["public_transport"="platform"]'
+        ],
+        'name': 'תחנת אוטובוס'
+    },
+    'train_station': {
+        'tags': ['["railway"="station"]'],
+        'name': 'תחנת רכבת'
+    },
+    'restaurant': {
+        'tags': ['["amenity"="restaurant"]'],
+        'name': 'מסעדה'
+    },
+    'cafe': {
+        'tags': ['["amenity"="cafe"]'],
+        'name': 'בית קפה'
+    },
+    'gym': {
+        'tags': ['["leisure"="fitness_centre"]', '["leisure"="fitness_station"]'],
+        'name': 'מכון כושר'
+    },
+    'bank': {
+        'tags': ['["amenity"="bank"]'],
+        'name': 'בנק'
+    },
+    'post_office': {
+        'tags': ['["amenity"="post_office"]'],
+        'name': 'דואר'
+    },
+    'community_center': {
+        'tags': ['["amenity"="community_centre"]'],
+        'name': 'מרכז קהילתי'
+    },
+    'daycare': {
+        'tags': ['["amenity"="childcare"]'],
+        'name': 'מעון יום'
+    },
+    'police': {
+        'tags': ['["amenity"="police"]'],
+        'name': 'תחנת משטרה'
+    },
+    'fire_station': {
+        'tags': ['["amenity"="fire_station"]'],
+        'name': 'תחנת כיבוי אש'
+    },
+    'recycling': {
+        'tags': ['["amenity"="recycling"]'],
+        'name': 'מרכז מיחזור'
     }
 }
 
