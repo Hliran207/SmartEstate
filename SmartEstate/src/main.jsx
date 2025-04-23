@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./Components/Layout";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -17,23 +18,26 @@ import UserAnalytics from "./Components/Admin/UserAnalytics.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* עטיפה ב־AuthProvider */}
+    {/* <Layout /> */}
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          <Route path="/adminHomePage" element={<AdminHomePage />} />
-          <Route path="/admin/analytics" element={<UserAnalytics />} />
-          <Route
-            path="/personal-questionnaire"
-            element={<PersonalQuestionnaire />}
-          />
+          {/* Wrap all routes in a layout */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<App />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/adminHomePage" element={<AdminHomePage />} />
+            <Route path="/admin/analytics" element={<UserAnalytics />} />
+            <Route
+              path="/personal-questionnaire"
+              element={<PersonalQuestionnaire />}
+            />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   </StrictMode>
-); 
+);

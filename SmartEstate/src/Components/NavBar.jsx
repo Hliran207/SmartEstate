@@ -29,17 +29,17 @@ const NavBar = () => {
         <Link to="/" className="navbar-brand d-flex align-items-center">
           <span className="logo-text">SMARTESTATE</span>
         </Link>
-        
-        <button 
-          className="navbar-toggler" 
-          type="button" 
+
+        <button
+          className="navbar-toggler"
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
+        <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
           <ul className="navbar-nav ms-auto">
             {!user ? (
               <>
@@ -62,8 +62,11 @@ const NavBar = () => {
                   </span>
                 </li>
                 <li className="nav-item">
-                  <Link to="/profile" className="nav-link">
-                    דף אישי
+                  <Link
+                    to={user.is_admin ? "/adminHomePage" : "/profile"}
+                    className="nav-link"
+                  >
+                    {user.is_admin ? "אזור ניהול" : "דף אישי"}
                   </Link>
                 </li>
                 <li className="nav-item">

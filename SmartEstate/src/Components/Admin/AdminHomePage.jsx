@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NavBar from "../NavBar";
 import { useNavigate } from "react-router-dom";
 
 const AdminHomePage = () => {
@@ -46,7 +45,6 @@ const AdminHomePage = () => {
 
   return (
     <>
-      <NavBar user={user} setUser={setUser} />
       <div className="container mt-4">
         <h2 className="mb-4">Admin Dashboard</h2>
         <div className="row">

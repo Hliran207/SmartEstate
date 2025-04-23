@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
-import NavBar from "./Components/NavBar";
 import MapBeerSheva from "./Components/MapBeerSheva";
 import "bootstrap/dist/css/bootstrap.css";
 import { useAuth } from "./Components/User/AuthContext";
@@ -22,14 +21,14 @@ function App() {
 
   return (
     <div>
-      <NavBar user={user} setUser={setUser} />
       <div className="container mt-4">
         {user ? (
           <h1>Hello, {user.first_name} 👋</h1>
         ) : (
-          <h1>ברוכים הבאים לאתר הנדל״ן הטוב בארץ עם דירוג השכונות</h1>
+          <h1 className="text-end fw-bold display-4" dir="rtl">
+            SmartEstate - בית מותאם במיוחד בשבילך!{" "}
+          </h1>
         )}
-        <p>מפת באר שבע</p>
         <MapBeerSheva />
       </div>
     </div>

@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import NavBar from "../NavBar";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const UserAnalytics = () => {
   const [userStats, setUserStats] = useState({
@@ -9,15 +17,18 @@ const UserAnalytics = () => {
     activeUsers: 0,
     newUsers: 0,
     userActivity: [],
-    userTypes: []
+    userTypes: [],
   });
 
   useEffect(() => {
     const fetchUserStats = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/admin/analytics/users", {
-          withCredentials: true
-        });
+        const response = await axios.get(
+          "http://localhost:8000/admin/analytics/users",
+          {
+            withCredentials: true,
+          }
+        );
         setUserStats(response.data);
       } catch (error) {
         console.error("Error fetching user analytics:", error);
@@ -29,10 +40,9 @@ const UserAnalytics = () => {
 
   return (
     <>
-      <NavBar />
       <div className="container mt-4" dir="rtl">
         <h2 className="mb-4">דוח משתמשים</h2>
-        
+
         {/* Summary Cards */}
         <div className="row mb-4">
           <div className="col-md-4">
@@ -65,7 +75,7 @@ const UserAnalytics = () => {
         <div className="card mb-4">
           <div className="card-body">
             <h5 className="card-title">פעילות משתמשים</h5>
-            <div style={{ width: '100%', height: 300 }}>
+            <div style={{ width: "100%", height: 300 }}>
               <ResponsiveContainer>
                 <BarChart data={userStats.userActivity}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -73,7 +83,11 @@ const UserAnalytics = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="activeUsers" name="משתמשים פעילים" fill="#8884d8" />
+                  <Bar
+                    dataKey="activeUsers"
+                    name="משתמשים פעילים"
+                    fill="#8884d8"
+                  />
                   <Bar dataKey="newUsers" name="משתמשים חדשים" fill="#82ca9d" />
                 </BarChart>
               </ResponsiveContainer>
@@ -85,7 +99,7 @@ const UserAnalytics = () => {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">חלוקת סוגי משתמשים</h5>
-            <div style={{ width: '100%', height: 300 }}>
+            <div style={{ width: "100%", height: 300 }}>
               <ResponsiveContainer>
                 <BarChart data={userStats.userTypes}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -104,4 +118,4 @@ const UserAnalytics = () => {
   );
 };
 
-export default UserAnalytics; 
+export default UserAnalytics;

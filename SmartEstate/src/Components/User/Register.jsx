@@ -76,81 +76,83 @@ const Register = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "500px" }}>
-      <h2 className="text-center mb-4">Register</h2>
+    <>
+      <div className="container mt-5" style={{ maxWidth: "500px" }}>
+        <h2 className="text-center mb-4">Register</h2>
 
-      {message && <div className="alert alert-success">{message}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-      {validationError && (
-        <div className="alert alert-warning">{validationError}</div>
-      )}
+        {message && <div className="alert alert-success">{message}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+        {validationError && (
+          <div className="alert alert-warning">{validationError}</div>
+        )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Email address</label>
-          <input
-            type="email"
-            name="email"
-            className="form-control"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label>First Name</label>
-          <input
-            type="text"
-            name="first_name"
-            className="form-control"
-            value={formData.first_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <label>First Name</label>
+            <input
+              type="text"
+              name="first_name"
+              className="form-control"
+              value={formData.first_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label>Last Name</label>
-          <input
-            type="text"
-            name="last_name"
-            className="form-control"
-            value={formData.last_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <label>Last Name</label>
+            <input
+              type="text"
+              name="last_name"
+              className="form-control"
+              value={formData.last_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirm_password"
-            className="form-control"
-            value={formData.confirm_password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirm_password"
+              className="form-control"
+              value={formData.confirm_password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button type="submit" className="btn btn-primary w-100">
-          Register
-        </button>
-      </form>
-    </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Register
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
